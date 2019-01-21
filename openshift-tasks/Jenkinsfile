@@ -32,7 +32,6 @@ podTemplate(
       // Extract version from the pom.xml
       def version = getVersionFromPom("pom.xml")
 
-      // TBD Set the tag for the development image: version + build number
       def devTag  = "${version}-${BUILD_NUMBER}"
       // Set the tag for the production image: version
       def prodTag = "${version}"
@@ -61,8 +60,7 @@ podTemplate(
       // Publish the built war file to Nexus
       stage('Publish to Nexus') {
         echo "Publish to Nexus"
-
-        // TBD: Publish to Nexus
+        sh "${mvnCmd} deploy -Dskiptests=true -DaltDeploymentRepository=nexus::default::http://nexus3.gpte-hw-cicd.svc.cluster.local:8081/repository/all-maven-public"
       }
 
       // Build the OpenShift Image in OpenShift and tag it.
