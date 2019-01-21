@@ -73,6 +73,7 @@ podTemplate(
       // Deploy the built image to the Development Environment.
       stage('Deploy to Dev') {
         echo "Deploying container image to Development Project"
+        sh "oc set env dc/tasks VERSION=\'${devTag} (tasks-dev)\' -n 2f27-tasks-dev"
         sh "oc set image dc/tasks tasks=docker-registry.default.svc:5000/2f27-tasks-dev/tasks:${devTag} -n 2f27-tasks-dev"
         sh "oc delete configmap tasks-config -n 2f27-tasks-dev --ignore-not-found=true"
         sh "oc create configmap tasks-config --from-file=./configuration/application-users.properties --from-file=./configuration/application-roles.properties -n 2f27-tasks-dev"
@@ -106,6 +107,7 @@ podTemplate(
         echo "Destination Application: " + destApp
 
         //      Set Image, Set VERSION
+        sh "oc set env dc/${destApp} VERSION=\'${prodTag} (${destApp})\' -n 2f27-tasks-prod"
         sh "oc set image dc/${destApp} ${destApp}=docker-registry.default.svc:5000/2f27-tasks-dev/tasks:${prodTag} -n 2f27-tasks-prod"
 
         // update config map
