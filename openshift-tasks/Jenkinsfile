@@ -33,15 +33,15 @@ podTemplate(
       def version = getVersionFromPom("pom.xml")
 
       // TBD Set the tag for the development image: version + build number
-      def devTag  = ""
+      def devTag  = "${version}-${BUILD_NUMBER}"
       // Set the tag for the production image: version
-      def prodTag = ""
+      def prodTag = "${version}"
 
       // Using Maven build the war file
       // Do not run tests in this step
       stage('Build war') {
         echo "Building version ${devTag}"
-
+        sh "${mvnCmd} clean package -DskipTests=true"
         // TBD: Execute Maven Build
       }
 
