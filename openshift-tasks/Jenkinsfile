@@ -122,6 +122,7 @@ podTemplate(
       stage('Switch over to new Version') {
         echo "Switching Production application to ${destApp}."
         // TBD: Execute switch
+        sh 'oc patch route tasks -n 2f27-tasks-prod -p \'{"spec":{"to":{"name":"' + destApp + '"}}}\''
       }
     }
   }
